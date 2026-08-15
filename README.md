@@ -2,7 +2,7 @@
 
 A field reference app for the mobile crane fleet — rope retentioning, hook block selection, outrigger support positioning, and reeving diagrams, all in one Progressive Web App that works with no signal once installed.
 
-**Open the app:** https://886ppak.github.io/myslewer/
+**Open the app:** [https://886ppak.github.io/myslewer-beta/]
 
 > Renamed from `liebherr` to `myslewer`. If you installed it to your home screen from the old `886ppak.github.io/liebherr/` link, that install is stale — remove it and reinstall from the link above.
 
