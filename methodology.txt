@@ -8983,3 +8983,53 @@ cranes get their own subsections as they're built.
   the same way by hand (e.g. 2x35t = 14.22 + 19.53x2 = 53.28kg).
 
   CACHE_VERSION v222->v223, app version v5.27->v5.28.
+
+67. Beta program wind-down: updated the trial-expired overlay's message,
+    scheduled the actual GitHub Pages shutdown five days out
+
+  The beta program itself has concluded. window.TRIAL_EXPIRES (set to
+  2026-08-26T00:00:00, see the inline script right after <body>) had
+  already reached its date as of this change, so the existing trial-
+  lock mechanism (section on the Beta Trial lock, added earlier - flips
+  html.trial-expired, hides header/nav/.container, shows
+  #trial-expired-overlay) was ALREADY live and active for anyone
+  loading a fresh copy - nothing new needed there. What changed is
+  purely the overlay's own content: it previously said the generic
+  "This trial build of Myslewer has expired... contact the person who
+  sent you this link", written for an ordinary mid-trial lockout, not
+  an actual program conclusion.
+
+  Replaced with a proper closing message - thanks the person for
+  taking part, and states plainly that the beta SITE itself (not just
+  the app inside it - the actual GitHub Pages hosting) will stop being
+  served on a specific date. That date is deliberately NOT a second
+  hardcoded literal: window.BETA_SHUTDOWN_DATE is computed as
+  TRIAL_EXPIRES + 5 days, so the trial-end date and the site-shutdown
+  date can never drift out of sync with each other the way two
+  separately-typed dates eventually would. The five-day gap is
+  intentional headroom - someone who missed the exact moment the trial
+  expired still gets several days to see this closing message (via a
+  normal app reopen, once their device's cached copy updates - see
+  below) before the link goes dead entirely, rather than the site
+  vanishing the instant the trial number ticked over.
+
+  "Clearing existing users' caches" in this app's own architecture
+  just means a normal CACHE_VERSION bump (myslewer-v51-beta149 ->
+  myslewer-v51-beta150 here) - sw.js already does skipWaiting()/
+  clients.claim() on activation (see its own top-of-file comment), so
+  this propagates the same way every other change in this app ever
+  has: no special one-off cache-busting mechanism needed, and none
+  invented for this. Confirmed the trial-expired class + new overlay
+  text render correctly via a local Playwright check before shipping -
+  screenshot showed "BETA TRIAL COMPLETE" with the computed shutdown
+  date reading "Monday 31 August 2026", matching TRIAL_EXPIRES+5 days
+  exactly.
+
+  Actually taking the GitHub Pages site OFFLINE on that date (disabling
+  Pages in the myslewer-beta repo's own Settings) is a separate, manual
+  step - no tool available in this session can change a repository's
+  Pages configuration directly, so it isn't something this change can
+  do on its own. Told the person plainly rather than silently leaving
+  it undone or pretending otherwise.
+
+  CACHE_VERSION beta149->beta150, app version v5.1->v5.2.
